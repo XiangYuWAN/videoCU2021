@@ -108,7 +108,7 @@ def getSobel_VideoArray(videoPath, videoW, videoH, yuvForm):
     img_w = videoW
     subimg_h, subimg_w = 128, 128
 
-    # 初始化
+    # 初始化 initialization
     yuv_frame = yuv_frames.pop()
     y = yuv_frame.y
     grad = Sobel_Filter(y)
@@ -137,7 +137,7 @@ def getLaplacian_VideoArray(videoPath, videoW, videoH, yuvForm):
     img_w = videoW
     subimg_h, subimg_w = 128, 128
 
-    # 初始化
+    # 初始化 initialization
     yuv_frame = yuv_frames.pop()
     y = yuv_frame.y
     grad = Laplacian_Filter(y)
