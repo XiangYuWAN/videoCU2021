@@ -25,4 +25,4 @@ if __name__ == '__main__':
     #  merge all these data frame together and produce a csv file
     result = pd.concat([N_result, S_result, L_result], axis=1)
     result.to_csv(csvPath)
-    # print(result)
+    print(result)

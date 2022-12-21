@@ -31,7 +31,8 @@ def reshapeSplit(array):
 # Using Sobel filter to an image
 def Sobel_Filter(image):
     ddepth = cv.CV_16S
-    # image = cv.GaussianBlur(image, (3, 3), 0)
+    # GaussianBlur to remove noise
+    image = cv.GaussianBlur(image, (3, 3), 0)
     Sx = cv.Sobel(image, ddepth, 1, 0)
     Sy = cv.Sobel(image, ddepth, 0, 1)
     abs_gradX = cv.convertScaleAbs(Sx)
