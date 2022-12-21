@@ -4,6 +4,12 @@ import pandas as pd
 import yuvio
 
 
+# Read first Frame Y of video
+def ReadFirstFrameY_of_Video(videoPath, videoW, videoH, yuvForm):
+    image = yuvio.imread(videoPath, videoW, videoH, yuvForm)
+    y = image.y
+    return y
+
 # Split a frame(image) to a 4D array
 def imageSplit(image, img_h, img_w, subimg_h, subimg_w):
     array = np.lib.stride_tricks.as_strided(
@@ -23,7 +29,7 @@ def reshapeSplit(array):
 
 
 # Using Sobel filter to an image
-def SobelFilter(image):
+def Sobel_Filter(image):
     ddepth = cv.CV_16S
     # image = cv.GaussianBlur(image, (3, 3), 0)
     Sx = cv.Sobel(image, ddepth, 1, 0)
@@ -35,7 +41,7 @@ def SobelFilter(image):
 
 
 # Using laplacian filter to an image
-def LaplacianFilter(image):
+def Laplacian_Filter(image):
     ddepth = cv.CV_16S
     kernal_size = 3
     image = cv.GaussianBlur(image, (3, 3), 0)
@@ -93,7 +99,7 @@ def getVideoArray(videoPath, videoW, videoH, yuvForm):
 
 
 # Extract video frames to array, But these frames are applied SobelF
-def getSobelVideoArray(videoPath, videoW, videoH, yuvForm):
+def getSobel_VideoArray(videoPath, videoW, videoH, yuvForm):
     yuv_frames = yuvio.mimread(videoPath, videoW, videoH, yuvForm)
 
     img_h = videoH
@@ -103,7 +109,7 @@ def getSobelVideoArray(videoPath, videoW, videoH, yuvForm):
     # 初始化
     yuv_frame = yuv_frames.pop()
     y = yuv_frame.y
-    grad = SobelFilter(y)
+    grad = Sobel_Filter(y)
     ##################### Divide frame and produce 2d matrix ############################
     array = imageSplit(grad, img_h, img_w, subimg_h, subimg_w)
     ra0 = reshapeSplit(array)
@@ -112,7 +118,7 @@ def getSobelVideoArray(videoPath, videoW, videoH, yuvForm):
     for i in range(length):
         yuv_frame = yuv_frames.pop()
         y = yuv_frame.y
-        grad = SobelFilter(y)
+        grad = Sobel_Filter(y)
         ##################### Divide frame and produce 2d matrix ############################
         array = imageSplit(grad, img_h, img_w, subimg_h, subimg_w)
         ra = reshapeSplit(array)
@@ -121,6 +127,33 @@ def getSobelVideoArray(videoPath, videoW, videoH, yuvForm):
     return ra0
 
 
+# Extract video Frame to array, but these frames are applied LaplacianFilter
+def getLaplacian_VideoArray(videoPath, videoW, videoH, yuvForm):
+    yuv_frames = yuvio.mimread(videoPath, videoW, videoH, yuvForm)
+
+    img_h = videoH
+    img_w = videoW
+    subimg_h, subimg_w = 128, 128
+
+    # 初始化
+    yuv_frame = yuv_frames.pop()
+    y = yuv_frame.y
+    grad = Laplacian_Filter(y)
+    ##################### Divide frame and produce 2d matrix ############################
+    array = imageSplit(grad, img_h, img_w, subimg_h, subimg_w)
+    ra0 = reshapeSplit(array)
+
+    length = yuv_frames.__len__()
+    for i in range(length):
+        yuv_frame = yuv_frames.pop()
+        y = yuv_frame.y
+        grad = Laplacian_Filter(y)
+        ##################### Divide frame and produce 2d matrix ############################
+        array = imageSplit(grad, img_h, img_w, subimg_h, subimg_w)
+        ra = reshapeSplit(array)
+        ra0 = np.row_stack((ra0, ra))
+
+    return ra0
 
 
 
@@ -132,7 +165,7 @@ if __name__ == '__main__':
     yuvForm = "yuv420p"
     Nomalarray = getVideoArray(videoPath, videoW, videoH, yuvForm)
     # print(Nomalarray.shape)
-    sobelarray = getSobelVideoArray(videoPath, videoW, videoH, yuvForm)
+    sobelarray = getSobel_VideoArray(videoPath, videoW, videoH, yuvForm)
     # print(sobelarray)
     Nresult = Array2DTo_MSSK(Nomalarray)
     Sresult = Array2DTo_MSSK(sobelarray)
