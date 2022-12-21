@@ -9,12 +9,12 @@ if __name__ == '__main__':
     csvPath = "csvFile/basketballCU.csv"
 
     # get 2D arrays of video with normal, after sobel, after lap, each row of arrays stand for a CU
-    Normal_array = vpf.getVideoArray(videoPath, videoW, videoH, yuvForm)
+    normal_array = vpf.getVideoArray(videoPath, videoW, videoH, yuvForm)
     sobel_array = vpf.getSobel_VideoArray(videoPath, videoW, videoH, yuvForm)
     lap_array = vpf.getLaplacian_VideoArray(videoPath, videoW, videoH, yuvForm)
 
     # calculate each CU's mean, std, skew and kurt
-    N_result = vpf.Array2DTo_MSSK(Normal_array)
+    N_result = vpf.Array2DTo_MSSK(normal_array)
     S_result = vpf.Array2DTo_MSSK(sobel_array)
     L_result = vpf.Array2DTo_MSSK(lap_array)
 
