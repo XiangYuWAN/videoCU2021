@@ -9,7 +9,6 @@ if __name__ == '__main__':
     csvPath = "csvFile/basketballCU.csv"
 
     mssk_result = pd.DataFrame
-    print(mssk_result)
     mssk_result = vpf.videoProcess(videoPath, videoW, videoH, yuvForm)
 
     mssk_result.to_csv(csvPath)
