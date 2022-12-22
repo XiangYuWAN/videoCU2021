@@ -156,6 +156,31 @@ def getLaplacian_VideoArray(videoPath, videoW, videoH, yuvForm):
 
     return ra0
 
+# Combine normal array, sobel array, lap array together
+def merge_MSSK_Array_together(normal_array,  sobel_array, lap_array):
+    # calculate each CU's mean, std, skew and kurt
+    n_result = Array2DTo_MSSK(normal_array)
+    s_result = Array2DTo_MSSK(sobel_array)
+    l_result = Array2DTo_MSSK(lap_array)
+
+    # change column name
+    s_result.columns = ['Sobel_Mean', 'Sobel_std', 'Sobel_Skew', 'Sobel_Kurt']
+    l_result.columns = ['Lap_Mean', 'Lap_std', 'Lap_Skew', 'Lap_Kurt']
+
+    #  merge all these data frame together and produce a csv file
+    mssk_result = pd.concat([n_result, s_result, l_result], axis=1)
+    return mssk_result
+
+# Start the whole video process to get dataframe result
+def videoProcess(videoPath, videoW, videoH, yuvForm):
+    # get 2D arrays of video with normal, after sobel, after lap, each row of arrays stand for a CU
+    normal_array = getVideoArray(videoPath, videoW, videoH, yuvForm)
+    sobel_array = getSobel_VideoArray(videoPath, videoW, videoH, yuvForm)
+    lap_array = getLaplacian_VideoArray(videoPath, videoW, videoH, yuvForm)
+
+    # merge together and return
+    mssk_result = merge_MSSK_Array_together(normal_array, sobel_array, lap_array)
+    return mssk_result
 
 
 
