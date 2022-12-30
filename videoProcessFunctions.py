@@ -1,5 +1,5 @@
 import numpy as np
-import cv2.cv2 as cv
+import cv2 as cv
 import pandas as pd
 import yuvio
 
